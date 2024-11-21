@@ -1,1 +1,1 @@
-{"edgeworker-version":"0.0.5","description":"A subWorker to return a key used in our NoMoreLeaks project","config": {"subrequest": {"invoke-for-edgeworker-clients": true}} }
+{"edgeworker-version":"0.0.6","description":"A subWorker to return a key used in our NoMoreLeaks project","config": {"subrequest": {"invoke-for-edgeworker-clients": true}} }

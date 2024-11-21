@@ -1,6 +1,6 @@
 {
   "name": "nomoreleakskey",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A subWorker to return a key used in our NoMoreLeaks project",
   "main": "index.ts",
   "config": {

@@ -40,30 +40,33 @@ export async function responseProvider(request: EW.ResponseProviderRequest) {
       //
       // so first lowercase our username and then normalize to NFC. (optional)
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize
-      const normalizedUnamePasswd =
-        myBody[UNAME].toLowerCase().normalize("NFC") +
-        myBody[PASSWD].normalize("NFC");
+      try {
+        const normalizedUnamePasswd =
+          myBody[UNAME].toLowerCase().normalize("NFC") +
+          myBody[PASSWD].normalize("NFC");
 
-      // create a string digest from our input string using SHA-256
-      hex = await generateDigest("SHA-256", normalizedUnamePasswd);
+        // create a string digest from our input string using SHA-256
+        hex = await generateDigest("SHA-256", normalizedUnamePasswd);
 
-      // when using DataStream for EdgeWorkers you can track the number successful of events
-      logger.info("SHA-256 hash created from username+password combination");
+        // when using DataStream for EdgeWorkers you can track the number successful of events
+        logger.info("SHA-256 hash created from username+password combination");
 
-      // return some nice JSON object with the response
-      return createResponse(
-        200,
-        { "Content-Type": ["application/json"] },
-        JSON.stringify({ key: hex })
-      );
-    } else {
-      logger.error("Something wrong with the request body");
-      return createResponse(500, {}, "Something wrong with the provided body");
+        // return some nice JSON object with the response
+        return createResponse(
+          200,
+          { "Content-Type": ["application/json"] },
+          JSON.stringify({ key: hex })
+        );
+      } catch (error) {
+        logger.error(`Something went wrong creating the SHA-256: ${error}`);
+        return createResponse(500, {}, "Something wrong creating the SHA-256");
+      }
     }
-  } else {
-    logger.error("Body too large");
-    return createResponse(500, {}, "Body too large");
   }
+
+  // if we came this far, something wrong with the request body
+  logger.error("Something wrong with the request body");
+  return createResponse(500, {}, "Something wrong with the provided body");
 }
 
 /**
